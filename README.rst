@@ -27,6 +27,17 @@ features:
 Installing rss2email
 ====================
 
+Local install:
+ - clone
+ - python setup.py install
+ - pip install oauth2client google-api-python-client
+ - r2e new $email
+ - get old feeds from feeds.dat file (r2e list not working): cat feeds.dat |awk '{print NR" "$0}'| grep "(dp" |awk -F" " '{print "sed -n "$1","$1+3"p feeds.dat"}'|sh
+ - add these
+ - config protocol, copy secret json (default dir)
+ - run first time
+ - setup cron: for n+5 min: 5-59/20 * * * *
+
 Packages
 --------
 
