@@ -55,6 +55,11 @@ import subprocess as _subprocess
 import sys as _sys
 import time as _time
 import os as _os
+import oauth2client
+from oauth2client import client, tools, file
+import httplib2
+from apiclient import errors, discovery
+import base64
 
 import html2text
 
@@ -182,6 +187,25 @@ def get_message(sender, recipient, subject, body, content_type,
                 message=message,
                 html=body)
     return message
+
+def oauth2gmail_send(message, config=None, section='DEFAULT'):
+    if config is None:
+        config = _config.CONFIG
+    creddir = config.get(section, 'oauth2-credentials')
+    #_LOG.info(str(creddir))
+    credfile = _os.path.join(creddir,'gmail.json')
+    store = oauth2client.file.Storage(credfile)
+    credentials = store.get()
+    _LOG.info(str(credentials))
+    if not credentials or credentials.invalid:
+        flow = oauth2client.client.flow_from_clientsecrets(_os.path.join(creddir,"rss2email_gmail_client_secret.json"), 'https://www.googleapis.com/auth/gmail.send')
+        flow.user_agent = 'rss2email'
+        credentials = tools.run_flow(flow, store)
+
+    print(credentials)
+    http = credentials.authorize(httplib2.Http())
+    service = discovery.build('gmail', 'v1', http=http)
+    service.users().messages().send(userId="me", body={'raw': base64.urlsafe_b64encode(message.as_bytes()).decode()}).execute()
 
 def smtp_send(recipient, message, config=None, section='DEFAULT'):
     if config is None:
@@ -413,6 +437,9 @@ def send(recipient, message, config=None, section='DEFAULT'):
         imap_send(message=message, config=config, section=section)
     elif protocol == 'maildir':
         maildir_send(message=message, config=config, section=section)
+    elif protocol == 'oauth2gmail':
+        _LOG.info('Sending email via oauth')
+        oauth2gmail_send(message=message, config=config, section=section)
     else:
         sendmail_send(
             recipient=recipient, message=message,

@@ -49,6 +49,8 @@
 import collections as _collections
 import configparser as _configparser
 
+import os as _os
+
 import html2text as _html2text
 
 class Config (_configparser.ConfigParser):
@@ -222,6 +224,7 @@ CONFIG['DEFAULT'] = _collections.OrderedDict((
         ### Mailing
         # Select protocol from: sendmail, smtp, imap
         ('email-protocol', 'sendmail'),
+        ('oauth2-credentials',_os.path.join(_os.path.expanduser('~'), '.rss2email')),
         # True: Use SMTP_SERVER to send mail.
         # Sendmail (or compatible) configuration
         ('sendmail', '/usr/sbin/sendmail'),  # Path to sendmail (or compatible)
