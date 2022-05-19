@@ -3,4 +3,6 @@ build
 dist
 MANIFEST
 rss2email.egg-info
+runr2e
+cronlog
 

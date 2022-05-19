@@ -37,6 +37,8 @@ Local install:
  - config protocol, copy secret json (default dir)
  - run first time
  - setup cron: for n+5 min: 5-59/20 * * * *
+ - script runr2e: cd current dir, ./r2e run ; chge perm a+x
+ - issue: get log (chge perm log file, in cron: >> ... 2>&1, run locally) -> pb package not installed -> which python? add whoami, which python3 in run script; (chge time cron: 2min) -> /usr/bin/python3 ; (install python-pip)
 
 Packages
 --------
