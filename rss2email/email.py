@@ -203,6 +203,7 @@ def oauth2gmail_send(message, config=None, section='DEFAULT'):
         credentials = tools.run_flow(flow, store)
 
     print(credentials)
+    #test if token expired
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('gmail', 'v1', http=http)
     service.users().messages().send(userId="me", body={'raw': base64.urlsafe_b64encode(message.as_bytes()).decode()}).execute()
