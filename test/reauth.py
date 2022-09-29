@@ -19,10 +19,9 @@ def get_element_by_index(driver, element, index):
     return(driver.find_element_by_xpath("(//"+element+")["+str(index)+"]"))
 
 
-def fill_field(driver,element,attribute,attribute_value,value):
-    elem = get_element(driver,element,attribute,attribute_value)
-    elem.clear()
-    elem.send_keys(value)
+def fill_field(driver,element,value):
+    element.clear()
+    element.send_keys(value)
 
 def click(driver,element):
     action_chains.ActionChains(driver).click(element).perform()
@@ -37,6 +36,9 @@ def wait_for_element(driver,element,attribute,attribute_value,timeout=1000):
 #opts = FirefoxOptions()
 #opts.add_argument("--headless")
 
+EMAIL=open(".email").read()
+PWD=open(".pwd").read()
+
 p = Popen(["python", "-u", "test_oauth2.py", "--noauth_local_webserver"], stdin=PIPE, stdout=PIPE, bufsize=1)
 for i in range(3):
     p.stdout.readline()
@@ -49,10 +51,14 @@ profile=webdriver.FirefoxProfile()
 driver = webdriver.Firefox(firefox_profile=profile)
 driver.delete_all_cookies()
 driver.get(rawadr)
-fill_field(driver,'input','id','identifierId',EMAIL)
-click(driver,get_element_by_index(driver, 'button', 4))
-#get_element_by_index(driver, 'button', 4).send_keys(Keys.ENTER)
-print(get_element(driver,'input','id','identifierId').get_attribute('innerHTML'))
+fill_field(driver,get_element_by_index(driver, 'input', 1),EMAIL)
+
+print(get_element_by_index(driver,'input',1).get_attribute('data-initial-value'))
+print(get_element_by_index(driver, 'button', 4).get_attribute('innerHTML'))
+
+#click(driver,get_element_by_index(driver, 'button', 4))
+get_element_by_index(driver, 'button', 4).send_keys(Keys.ENTER)
+#print(get_element(driver,'input','id','identifierId').get_attribute('innerHTML'))
 
 wait_for_element(driver, 'input', 'name', 'password')
 
